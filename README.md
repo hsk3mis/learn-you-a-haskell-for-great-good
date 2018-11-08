@@ -87,6 +87,10 @@ stack test :chapter3
         - all guards must evaluate to Boolean
         - if all guards evaluate to False, then evaluation falls through to the next pattern
 
+* Where bindings vs Let bindings:
+    Where can be used in Guards, Let is more local.
+    Where = just syntactic constructs; readable because function body is closer to the function name
+    Let = expressions themselves
 
 
 * Notes
@@ -95,6 +99,18 @@ stack test :chapter3
         eg. putStrLn (show (1 + 2))   <=>   putStrLn $ show $ 1 + 2
     * . operator => to chain functions
         eg. (putStrLn . show) (1 + 2)
+
+
+---
+????????????????? PYTANIA ?????????????????
+* Guards vs Pattern-matching vs Case expression vs if-else => jaki jest minimalny zbiór? czy tyle opcji jest tylko dla poprawienia czytelności?
+
+
+
+
+
+
+
 
 
 
