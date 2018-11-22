@@ -17,13 +17,23 @@ stack test :chapter3
 * Links
     * Learn You a Haskell for Great Good: http://learnyouahaskell.com
     * Kurs inny: http://www.cse.chalmers.se/edu/course/TDA555/schedule.html
-    * Zadanka: http://www.cse.chalmers.se/edu/course/TDA555/ex-week2.html
+    * Zadanka:
+        http://www.cse.chalmers.se/edu/course/TDA555/ex-week2.html
+        https://wiki.haskell.org/99_questions/1_to_10
     * Category Theory for Programmers:
         HTML: https://bartoszmilewski.com/2014/10/28/category-theory-for-programmers-the-preface/
         PDF+codes: https://github.com/hmemcpy/milewski-ctfp-pdf/
         YouTube: https://www.youtube.com/playlist?list=PLbgaMIhjbmEnaH_LTkxLI7FMa2HsnawM_
     * Hitchhikers guide to Haskell: https://wiki.haskell.org/Hitchhikers_guide_to_Haskell
     * like-Haskell on JVM: https://eta-lang.org/
+    * Zadanka z cyklem w ciągu:
+        * Periodic sequence vs Eventually Periodic sequence => https://en.wikipedia.org/wiki/Periodic_sequence
+        * Pisano period => https://en.wikipedia.org/wiki/Pisano_period
+        * Cycle detection in general => https://en.wikipedia.org/wiki/Cycle_detection
+        * Obliczyć dla Pisano period i sprawdzić z tabelkami na Wiki
+        * Sprawdzić dla dowolnego ciągu periodycznego jest dość łatwe, co z ciągiem eventually periodic?
+        * Sprawdzić dla dowolnego ciągu czy ma okres?
+    
     * Classes:
         * Hierarchy = https://www.haskell.org/onlinereport/basic.html
         * Num = http://zvon.org/other/haskell/Outputprelude/Num_c.html
@@ -105,6 +115,9 @@ stack test :chapter3
 ????????????????? PYTANIA ?????????????????
 * Guards vs Pattern-matching vs Case expression vs if-else => jaki jest minimalny zbiór? czy tyle opcji jest tylko dla poprawienia czytelności?
 
+* Fajnie by było mieć taką konstrukcję (identyczna nazwa w różnych miejscach):
+    elem' x (x:ys) = True
+    elem' x (y:ys) = elem' x ys
 
 
 
