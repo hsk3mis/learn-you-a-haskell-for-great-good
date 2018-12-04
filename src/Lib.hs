@@ -1,5 +1,6 @@
-module Lib
-    ( someFunc, double, half, prop_Sorted, testSorted) where
+--module Lib
+--    ( someFunc, double, half, prop_Sorted, testSorted) where
+module Lib where
 
 import Test.QuickCheck
 
@@ -45,19 +46,22 @@ testSorted = quickCheck prop_Sorted
 
 
 
-
-
-
 -- DEFINING CUSTOM DATA TYPES TEST
-data T a = N | a :-> (T a)
+data T a = N | a :-> (T a) deriving (Show)
 infixr :->
 
 mylist :: T Int
 mylist = 10 :-> 17 :-> N
 
+mylistSize N = 0
+mylistSize (x :-> xs) = 1 + mylistSize xs
 
 
+type Set = Int -> Bool
+contains :: Set -> Int -> Bool
+contains set elem = set elem
 
-
-
+s1 1 = True
+s1 2 = True
+s1 _ = False
 

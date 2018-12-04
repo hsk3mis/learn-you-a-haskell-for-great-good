@@ -24,6 +24,12 @@ stack test :chapter3
         HTML: https://bartoszmilewski.com/2014/10/28/category-theory-for-programmers-the-preface/
         PDF+codes: https://github.com/hmemcpy/milewski-ctfp-pdf/
         YouTube: https://www.youtube.com/playlist?list=PLbgaMIhjbmEnaH_LTkxLI7FMa2HsnawM_
+    * Type constructors:
+        https://wiki.haskell.org/Constructor
+        https://wiki.haskell.org/Syntactic_sugar/Cons
+        https://www.haskell.org/tutorial/goodies.html
+        https://stackoverflow.com/questions/5597157/standard-definition-of-list
+
     * Hitchhikers guide to Haskell: https://wiki.haskell.org/Hitchhikers_guide_to_Haskell
     * like-Haskell on JVM: https://eta-lang.org/
     * Zadanka z cyklem w ciągu:
