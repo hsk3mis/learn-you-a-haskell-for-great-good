@@ -117,13 +117,6 @@ stack test :chapter3
         eg. (putStrLn . show) (1 + 2)
 
 
----
-????????????????? PYTANIA ?????????????????
-* Guards vs Pattern-matching vs Case expression vs if-else => jaki jest minimalny zbiór? czy tyle opcji jest tylko dla poprawienia czytelności?
-
-* Fajnie by było mieć taką konstrukcję (identyczna nazwa w różnych miejscach):
-    elem' x (x:ys) = True
-    elem' x (y:ys) = elem' x ys
 
 
 
