@@ -57,11 +57,7 @@ mylistSize N = 0
 mylistSize (x :-> xs) = 1 + mylistSize xs
 
 
-type Set = Int -> Bool
-contains :: Set -> Int -> Bool
-contains set elem = set elem
+{------------------------------------------------------------------------------------}
 
-s1 1 = True
-s1 2 = True
-s1 _ = False
+
 
