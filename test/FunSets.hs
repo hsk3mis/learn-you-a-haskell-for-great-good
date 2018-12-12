@@ -21,12 +21,15 @@ type Set = Int -> Bool
 
 {- Indicates whether a set contains a given element -}
 contains :: Set -> Int -> Bool
-contains s x = s x
-
+--contains s x = s x
+contains s = s
 
 {- Returns the set of the one given element -}
 singletonSet :: Int -> Set
-singletonSet x = \y -> if (y == x) then True else False
+--singletonSet x = \y -> if (y == x) then True else False
+--singletonSet x = \y -> y == x
+--singletonSet x = (==) x
+singletonSet = (==)
 
 set1 = singletonSet 1
 set2 = singletonSet 2
@@ -40,8 +43,9 @@ singletonSetDontContainOtherElements =
 
 
 {- Returns the union of the two given sets, the sets of all elements that are in either `s` or `t`. -}
-union :: Set -> Set -> Set
+union :: Set -> Set -> Set --Expanded Type: (Int -> Bool) -> (Int -> Bool) -> (Int -> Bool)
 union s1 s2 = \x -> s1 x || s2 x
+--union s1 s2 x = s1 x || s2 x --Works also
 
 set12 = union set1 set2
 set13 = union set1 set3
@@ -77,8 +81,8 @@ diffDontContainElementsFromBothSets =
     where diffS = diff set12 set13
 
 {- Returns the subset of `s` for which predicate `p` holds. -}
-filter :: Set -> (Int -> Bool) -> Set
-filter s p = \x -> (s x) && (p x)
+filter' :: Set -> (Int -> Bool) -> Set
+filter' s p = \x -> (s x) && (p x)
 
 
 {-
@@ -90,7 +94,9 @@ bound = 1000
 
 {- Returns whether all bounded integers within `s` satisfy `p`. -}
 forall :: Set -> (Int -> Bool) -> Bool
-forall s p = [x | x <- [-bound..bound], s x, not (p x)] == []
+forall s p = [x | x <- [-bound..bound], s x, not (p x)] == [] -- Lazily check list equality (stops when first list already generated 1st element)!
+--forall s p = and (map p (filter s [-bound..bound])) -- Also Works
+
 
 forAllPositiveCase =
   testCase "FunSets: forAll positive" $ assertEqual [] True $ forall set12 (\x -> x < 3)
@@ -113,12 +119,12 @@ map' :: Set -> (Int -> Int) -> Set
 map' s f = \x -> exists s (\y -> f y == x)
 
 mapContainsTransformedElements =
-  testCase "FunSets: map contains transformed elements" $ assertEqual [] True $ (squares12 1) && (squares12 4)
-    where squares12 = map' set12 (\x -> x^2)
+  testCase "FunSets: map contains transformed elements" $ assertEqual [] True $ (plus10 11) && (plus10 12)
+    where plus10 = map' set12 (+10)
 
 mapDontContainOtherElements =
-  testCase "FunSets: map don't contain other elements" $ assertEqual [] False $ squares12 2
-    where squares12 = map' set12 (\x -> x^2)
+  testCase "FunSets: map don't contain other elements" $ assertEqual [] False $ plus10 2
+    where plus10 = map' set12 (+10)
 
 
 {- Displays the contents of a set -}

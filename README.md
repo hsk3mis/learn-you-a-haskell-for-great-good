@@ -117,6 +117,20 @@ stack test :chapter3
         eg. (putStrLn . show) (1 + 2)
 
 
+* Laziness
+    * Evaluates expressions ONLY when needed and then remember those evaluations
+        ** Map Example
+            list = [1,2,3,4,5,6,7,8]
+            list2 = map mapper list
+            mapper x = x + 1    //:breakpoint
+            
+            - "head list2" only calls mapper 1once
+            - another call to "head list2" doesn't call mapper
+        ** List equality Example
+            forall s p = [x | x <- [-bound..bound], s x, not (p x)] == []
+            
+            - checking if 2 lists are equal is also lazy! If it checks that first list has 1 item it stops generating the rest of the first list!
+    
 
 
 
