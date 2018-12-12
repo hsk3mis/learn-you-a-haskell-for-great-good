@@ -14,7 +14,10 @@ stack test :chapter1
 stack test :chapter3
 ```
 
-* Links
+* GHCI Links
+    * Debugging: https://downloads.haskell.org/~ghc/7.4.1/docs/html/users_guide/ghci-debugger.html
+
+* Haskell Links
     * Learn You a Haskell for Great Good: http://learnyouahaskell.com
     * Kurs inny: http://www.cse.chalmers.se/edu/course/TDA555/schedule.html
     * Zadanka:
