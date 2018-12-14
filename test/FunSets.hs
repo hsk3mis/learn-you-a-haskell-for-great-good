@@ -36,14 +36,15 @@ type Set = Int -> Bool
 {- Indicates whether a set contains a given element -}
 contains :: Set -> Int -> Bool
 --contains s x = s x
-contains s = s
+--contains s = s
+contains = id
 
 {- Returns the set of the one given element -}
 singletonSet :: Int -> Set
 --singletonSet x = \y -> if (y == x) then True else False
 --singletonSet x = \y -> y == x
 --singletonSet x = (==) x
-singletonSet = (==)
+singletonSet = (==) --jak zaaplikujemy do funkcji (==) jeden argument to dostaniemy funkcję która bierze jeden argument i zwraca czy te rzeczy są równe
 
 set1 = singletonSet 1
 set2 = singletonSet 2
@@ -51,8 +52,9 @@ set3 = singletonSet 3
 
 {- Returns the union of the two given sets, the sets of all elements that are in either `s` or `t`. -}
 union :: Set -> Set -> Set --Expanded Type: (Int -> Bool) -> (Int -> Bool) -> (Int -> Bool)
-union s1 s2 = \x -> s1 x || s2 x
---union s1 s2 x = s1 x || s2 x --Works also
+--union s1 s2 = \x -> s1 x || s2 x
+--union s1 s2 x = or [s1 x, s2 x] --Works, but not really better
+union s1 s2 x = s1 x || s2 x
 
 set12 = union set1 set2
 set13 = union set1 set3
