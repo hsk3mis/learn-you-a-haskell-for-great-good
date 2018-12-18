@@ -82,6 +82,9 @@ bound = 1000
 forall :: Set -> (Int -> Bool) -> Bool
 forall s p = [x | x <- [-bound..bound], s x, not (p x)] == [] -- Lazily check list equality (stops when first list already generated 1st element)!
 --forall s p = and (map p (filter s [-bound..bound])) -- Also Works
+--forall s p = length [x | x <- [-bound..bound], s x, not (p x)] == 0 -- This is NOT Lazy
+--but we could write Lazy function lengthEq [1,2,3] 0 that could do the trick
+
 
 {- Returns whether there exists a bounded integer within `s` that satisfies `p`. -}
 exists :: Set -> (Int -> Bool) -> Bool
@@ -90,6 +93,7 @@ exists s p = not (forall s (\x -> not (p x)))
 {- Returns a set transformed by applying `f` to each element of `s`. -}
 map' :: Set -> (Int -> Int) -> Set
 map' s f = \x -> exists s (\y -> f y == x)
+--If we have inverted function then we could write it better (but it's not always possible)
 
 {- Displays the contents of a set -}
 toString :: Set -> String
