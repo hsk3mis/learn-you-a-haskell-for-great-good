@@ -1,5 +1,8 @@
-l = [1..10]
-filter3 x = x < 3
-filter5 x = x < 5
+elem' y ys = foldl (\acc x -> if x == y then True else acc) False ys
 
-mapped3 = [x | x<-l, filter5 x, filter3 x]
+l = [x | x<-[1..10], p x]
+
+p x = x < 6
+
+test = elem' 3 l
+test2 = elem' 7 l

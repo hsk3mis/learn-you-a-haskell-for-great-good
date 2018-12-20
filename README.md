@@ -133,7 +133,88 @@ stack test :chapter3
             forall s p = [x | x <- [-bound..bound], s x, not (p x)] == []
             
             - checking if 2 lists are equal is also lazy! If it checks that first list has 1 item it stops generating the rest of the first list!
+            - but this is NOT Lazy: forall s p = length [x | x <- [-bound..bound], s x, not (p x)] == 0
     
+* Recursion + Higher order functions
+    * Necessary to define what something is (not how it's created), so there's no while/for loops
+
+    * replicate :: Int -> a -> [a]                                  //Replicates x multiple times
+    * zipWith'  :: (a -> b -> c) -> [a] -> [b] -> [c]               //Zip with function transformation
+    * flip      :: (a -> b -> c) -> b -> a -> c                     //flips the arguments of the function given
+        flip f = \x y -> f y x
+    * map       :: (a -> b) -> [a] -> [b]
+    * filter    :: (a -> Bool) -> [a] -> [a]                        //NOT work on Infinite Lists (use takeWhile)
+    * takeWhile :: (a -> Bool) -> [a] -> [a]                        //Takes elements as long as the predicate holds
+    * foldl     :: Foldable t => (b -> a -> b) -> b -> t a -> b)    //Reduces list to a single value, left to right
+        sum xs = foldl (\acc x -> acc + x) 0 xs                     //NOT Lazy !!
+        sum = foldl (+) 0
+        reverse' xs = foldl (flip (:)) []
+    * foldr                                                         //od prawej, przydatne szczególnie jak chcemy zbudować listę wynikową !!
+        map' f xs = foldr (\x acc -> f x :: acc) [] xs              //bo używamy : zamiast ++
+                                                                    //works on infinite lists => you can start from some place of the infinite list and go to the beginning!! With foldl you'll never finish
+    * foldl1, foldr1                                                //starting value = first element (don't work on empty lists!)
+    
+    * RIGHT FOLD => foldr f acc [3,4,5,6] = f 3 (f 4 (f 5 (f 6 acc)))
+    * LEFT FOLD  => foldl g acc [3,4,5,6] = g (g (g (g z 3) 4) 5) 6
+
+    * scanl, scanr              //like folds, but report all intermediate accumulator results as list
+        scanl (+) 0 [3,4,5,6]   => [0,3,8,10,11]
+        scanr (+) 0 [3,4,5,6]   => [11,8,3,1,0]
+
+* Lambdas:
+    * Simple lambda: \x -> x + 3
+    * Partial application (better readability): (+3)
+    * Multiple arguments: \x y -> x + y
+    * With pattern matching: \(x, y) -> x + y
+
+* Function application: " " and "$"
+    * Function application with " " has very high precedence and it's left-associative: f x y = ((f x) y)
+    * Function application with "$" has the lowest precedence and it's right-associative: f x y = (f (x y))
+    * ($) :: (a -> b) -> a -> b
+
+    * Function application "$" is just another function:
+        map ($ 3) [(4+), (10*), (^2)]   => [7, 30, 9]               //($ 3) = apply 3 for each function in the list
+
+* Function composition with "." (cleaner to write than lambdas)
+    * (.) :: (b -> c) -> (a -> b) -> a -> c
+    * f . g = \x -> f (g x)  
+    * Right-associtive: (f . g. h) x = f (g (h x))
+        replicate 100 (product (map (*3) (zipWith max [1,2,3,4,5] [4,5,6,7,8])))   =   replicate 100 . product . map (*3) . zipWith max [1,2,3,4,5] $ [4,5,6,7,8]    
+        
+        sum (takeWhile (<10000) (filter odd (map (^2) [1..])))   =   sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]
+        
+    * Better readability:
+        oddSquareSum =   
+            let oddSquares = filter odd $ map (^2) [1..]  
+                belowLimit = takeWhile (<10000) oddSquares  
+            in  sum belowLimit 
+
+    * Point-free style (defining functions in the point free style)
+        - functions that never mention the data upon which they operate. You use first class functions, currying, and composition all together.
+        - Point-free composition improves the clarity and readability of the code.
+            More than that, it favors the practice of decomposing everything into smaller pieces that can be then composed together in a very expressive manner.
+            Point-free style goes hand in hand with the practice of giving intention-revealing names. Taking the time to write good function names makes point-free composition much easier to read.
+        
+        - It helps the writer (and reader) think about composing functions (high level), rather than shuffling data (low level).
+            Explicit points often obscure the underlying algorithm.
+        - A 'points-free' definition of a function is one which does not explicitly mention the points (values) of the space on which the function acts. (Topology)
+        
+        sum' xs = foldl (+) 0 xs
+        sum' = foldl (+) 0              //point free style
+        
+    * Free variable = variables that are neither local variables nor parameters of the function
+    * Bound variable = was free, but has been bound to a specific value (or set of values)
+
+* Modules
+    
+
+
+
+
+
+
+
+
 
 
 

@@ -197,9 +197,22 @@ evenNumberNotBeingSumOf2Primes range = [x | x <- range, even x, not (isSumOf2Pri
 
 
 
+-- QuickSort
+quickSort :: (Ord a) => [a] -> [a]
+quickSort [] = []
+quickSort (x::xs) = smallerThanX ++ [x] ++ largerThanX
+  where smallerThanX = quickSort [y | y <- xs, y <= x]    -- filter (<=x) xs
+        largerThanX  = quickSort [y | y <- xs, y > x]     -- filter (>x) xs
 
 
+-- List of functions
+zipWith (\f (a,b) -> f a b) [(+), (*), (-)] (zip [2,3,10] [2,3,5])
 
+-- Usage of folds
+reverse' = foldl (\acc x -> x : acc) []
+reverse'' = foldl (flip (:)) []           --tricky ;)
+head' = foldr1 (\x _ -> x)                --always use the accumulator (at first initialized to first element value)
+last' = foldl1 (\_ x -> x)                --always use the x element ignoring accumulator
 
 
 

@@ -7,7 +7,7 @@ main = defaultMain unitTestsChapter1
 
 unitTestsChapter1 = testGroup "Unit tests Chapter1"
   [infixFunctionApplication,
-   listsConcatenation, listsConstruction, listElementByIndex, listsComparison, listsNullCheck, listsTake, listsElem,
+   listsGetElemByIndex, listsConcatenation, listsConstruction, listElementByIndex, listsComparison, listsNullCheck, listsTake, listsElem,
    simpleRangeDefinitionWithStep, decreasingRange, decreasingRangeError, cycleExample, repeatExample,
    listComprehesionExample, listComprehesionMultipleLists, lengthExample, listComprehesionNestedForNestedLists,
    tupleFirstElement, tupleSecondElement, zipListsExample,
@@ -24,6 +24,9 @@ infixFunctionApplication =
 a `max'` b = if (a >= b) then a else b
 
 -- LISTS
+listsGetElemByIndex =
+  testCase "Lists: get element by index" $ assertEqual [] 'c' (['a'..'z'] !! 2)
+
 listsConcatenation =
   testCase "Lists: concatenation (must iterate the whole first list)" $ assertEqual [] "woot" (['w', 'o'] ++ ['o', 't'])
 
