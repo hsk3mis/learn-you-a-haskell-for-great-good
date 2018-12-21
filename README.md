@@ -206,9 +206,18 @@ stack test :chapter3
     * Bound variable = was free, but has been bound to a specific value (or set of values)
 
 * Modules
+    * import Data.List (nub, sort)      //import only some of the functions
+    * import Data.List hiding (nub)     //don't import some functions
+    * import qualified Data.Map as M    //import qualified functions (if you have name clashes)
+        use M.filter instead of Data.Map.filter
     
-
-
+    * foldl'    = strict version of foldl; NOT lazy version of foldl
+        Due to the lazy nature of the folds, the accumulator value isn't actually updated as the folding happens.
+        What actually happens is that the accumulator kind of makes a promise that it will compute its value when asked to actually produce the result (also called a thunk).
+        That happens for every intermediate accumulator and all those thunks overflow your stack.
+        
+        The strict folds aren't lazy buggers and actually compute the intermediate values as they go along instead of filling up your stack with thunks.
+        So if you ever get stack overflow errors when doing lazy folds, try switching to their strict versions.
 
 
 
