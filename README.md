@@ -171,9 +171,29 @@ stack test :chapter3
     * Function application with " " has very high precedence and it's left-associative: f x y = ((f x) y)
     * Function application with "$" has the lowest precedence and it's right-associative: f x y = (f (x y))
     * ($) :: (a -> b) -> a -> b
+    
+    * Works the same as $:
+        (@@)       :: (a -> b) -> a -> b
+        f @@ x     =  f x
+        infixr 0 @@
+    * Or this:
+        i       :: (a -> b) -> a -> b
+        f `i` x     =  f x
+        infixr 0 `i`
 
     * Function application "$" is just another function:
         map ($ 3) [(4+), (10*), (^2)]   => [7, 30, 9]               //($ 3) = apply 3 for each function in the list
+        
+    * Example:
+        f :: Float -> String
+        f x = show x
+        
+        g :: String -> Int
+        g x = length x
+        
+        (g . f) 1 => daje tą samą wartość co => g $ f 1 => ale inne są tworzy po drodze!!
+        gg = g . f
+        gg' = (g $ f) //to się już nie kompiluje
 
 * Function composition with "." (cleaner to write than lambdas)
     * (.) :: (b -> c) -> (a -> b) -> a -> c
@@ -219,8 +239,17 @@ stack test :chapter3
         The strict folds aren't lazy buggers and actually compute the intermediate values as they go along instead of filling up your stack with thunks.
         So if you ever get stack overflow errors when doing lazy folds, try switching to their strict versions.
 
+* ????????????
+    * Maybe = Just something | Nothing
 
 
+
+
+* Symbols in Haskell: (https://stackoverflow.com/questions/10548170/what-characters-are-permitted-for-haskell-operators)
+
+    * Operator: (operators are infix by default)
+        - an operator symbol eg. + or $$
+        - or an ordinary identifier enclosed in grave accents (backquotes), eg. `op`
 
 
 
