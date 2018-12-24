@@ -2,6 +2,9 @@ import Test.Tasty (defaultMain, testGroup)
 import Test.Tasty.HUnit (testCase, assertEqual, assertBool, (@=?))
 import Data.List
 import Data.Function (on)
+import Data.Char
+import qualified Data.Map as Map
+import qualified Data.Set as Set
 
 main = defaultMain unitTestsListSetMap
 
@@ -69,9 +72,37 @@ unitTestsListSetMap = testGroup "Unit tests Lists, Sets, Maps etc."
         * when you're dealing with By functions that take an ordering function, you usually do compare `on` something
     -}
 
+    , testCase "on': compare normal" $ assertEqual [] LT $ [1,2,3] `compare` [4,5,6]
+    , testCase "on': compare `on'` length" $ assertEqual [] EQ $ let compareOnLength = compare `on'` length in [1,2,3] `compareOnLength` [4,5,6]
+
+    , testCase "ord: A = 65" $ assertEqual [] 65 $ ord 'A'
+    , testCase "chr: a = 97" $ assertEqual [] 'a' $ chr 97
+
+    , testCase "caesar cipher: encode" $ assertEqual [] "bcde" $ caesarEncode 1 "abcd"
+    , testCase "caesar cipher: decode" $ assertEqual [] "abcd" $ caesarDecode 2 "cdef"
+
+    {- MAPS (Association Lists) -}
+    {- Duplicates replace previous value -}
+    , testCase "map: find Just b" $ assertEqual [] (Just "c") $ 2 `Map.lookup` (Map.fromList [(1, "a"), (2, "b"), (2, "c")])
+    , testCase "map: find Nothing" $ assertEqual [] Nothing $ Map.lookup 3 (Map.fromList [(1, "a"), (2, "b")])
+    {- Duplicates are handled with function -}
+    , testCase "map: fromListWith concatenation" $ assertEqual [] (Just "cb") $ Map.lookup 2 (Map.fromListWith (\x y -> x ++ y) [(1, "a"), (2, "b"), (2, "c")])
+    , testCase "map: fromListWith max" $ assertEqual [] (Just 19) $ Map.lookup 2 (Map.fromListWith max [(1, 11), (2, 12), (2, 19)])
+
+    {- SETS -}
+    , testCase "set: intersection" $ assertEqual [] (Set.fromList "abc") $ Set.intersection (Set.fromList "xyzabcqwe") (Set.fromList "poiabclkj")
+    , testCase "set: subset is a proper subset or the same set" $ assertEqual [] True $ let s = Set.fromList "abc" in s `Set.isSubsetOf` s
+    , testCase "set: proper subset" $ assertEqual [] False $ let s = Set.fromList "abc" in s `Set.isProperSubsetOf` s
+    , testCase "set: faster Nub - require Eq (List.nub require only Eq)" $ assertEqual [] "ab" $ setNub "aaaabbbaabbb"
+
+
+
 
 
   ]
+
+
+
 
 {- @@ = function like (right-associative with lowest precedence) -}
 (@@) :: (a -> b) -> a -> b
@@ -112,3 +143,22 @@ search :: (Eq a) => [a] -> [a] -> Bool
 search needle haystack =
     let nlen = length needle
     in  foldl (\acc x -> if take nlen x == needle then True else acc) False (tails haystack)
+
+
+{- Compare on length-}
+on' :: (b -> b -> c) -> (a -> b) -> a -> a -> c
+on' comp mapper = \x y -> mapper x `comp` mapper y
+
+{- Caesar cipher -}
+caesarEncode :: Int -> String -> String
+caesarEncode shift msg = map (chr . (+ shift). ord) msg
+--caesarEncode shift msg =
+--    let ords = map ord msg
+--        shifted = map (+ shift) ords
+--    in  map chr shifted
+
+caesarDecode :: Int -> String -> String
+caesarDecode shift msg = caesarEncode (negate shift) msg
+
+{- Faster deduplication than List.nub, but require Ord (List.nub only require Eq) -}
+setNub xs = Set.toList $ Set.fromList xs

@@ -239,7 +239,7 @@ stack test :chapter3
         The strict folds aren't lazy buggers and actually compute the intermediate values as they go along instead of filling up your stack with thunks.
         So if you ever get stack overflow errors when doing lazy folds, try switching to their strict versions.
 
-* ????????????
+* Common Data Types
     * Maybe = Just something | Nothing
 
 
@@ -251,6 +251,27 @@ stack test :chapter3
         - an operator symbol eg. + or $$
         - or an ordinary identifier enclosed in grave accents (backquotes), eg. `op`
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+?????????????????????????????????????
+* Rekurencja vs Fold: It's usually better to use folds for this standard list recursion pattern instead of explicitly writing the recursion because they're easier to read and identify
+    - Fold nie jest lazy !!!!!!!!!!!!!
 
 
 
