@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+ghc --make testIo
+
+
+#runhaskell testIo.hs #compiles and runs program

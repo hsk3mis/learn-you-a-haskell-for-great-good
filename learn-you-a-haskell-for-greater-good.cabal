@@ -34,6 +34,8 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , random
+    , bytestring
     , containers
     , QuickCheck
   default-language: Haskell2010
@@ -142,3 +144,46 @@ test-suite listSetMap
     , HUnit
     , smallcheck
   default-language: Haskell2010
+
+test-suite inputOutput
+  type: exitcode-stdio-1.0
+  main-is: InputOutput.hs
+  other-modules:
+      Paths_learn_you_a_haskell_for_greater_good
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , random
+    , containers
+    , learn-you-a-haskell-for-greater-good
+    , tasty
+    , tasty-hunit
+    , tasty-smallcheck
+    , HUnit
+    , smallcheck
+  default-language: Haskell2010
+
+test-suite monads
+  type: exitcode-stdio-1.0
+  main-is: Monads.hs
+  other-modules:
+      Paths_learn_you_a_haskell_for_greater_good
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , random
+    , containers
+    , learn-you-a-haskell-for-greater-good
+    , tasty
+    , tasty-hunit
+    , tasty-smallcheck
+    , HUnit
+    , smallcheck
+    , mtl
+  default-language: Haskell2010
+
+-- mtl = Monads etc.

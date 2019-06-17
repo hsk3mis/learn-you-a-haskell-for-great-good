@@ -17,8 +17,6 @@ doubleMe x = x + x
 
 
 
-
-
 -- TESTING OF QUICK CHECK -> it works and return IO () printing "+++ OK, passed 100 tests."
 -- executes 100 tests with random values for prop_Sorted
 sorted :: Ord a => [a] -> Bool

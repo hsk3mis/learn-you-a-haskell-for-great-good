@@ -1,5 +1,17 @@
 # learn-you-a-haskell-for-greater-good
 
+* What is functional programming?
+    - Logic programming = is exploring queries and building search trees
+    - Functional programming = is reducing things, rewriting programs, simplifying programs using Beta, Beta-reduction, and other things
+
+
+
+
+
+
+
+
+
 * Important commands
 ```bash
 stack ghci (+ :load Main)
@@ -12,6 +24,11 @@ stack exec learn-you-a-haskell-for-greater-good
 ```bash
 stack test :chapter1
 stack test :chapter3
+```
+
+* Help resolve problems
+```bash
+ghc-pkg list - in the command-line - shows which Haskell packages you have installed 
 ```
 
 * GHCI Links
@@ -32,6 +49,15 @@ stack test :chapter3
         https://wiki.haskell.org/Syntactic_sugar/Cons
         https://www.haskell.org/tutorial/goodies.html
         https://stackoverflow.com/questions/5597157/standard-definition-of-list
+    * Generalised Algebraic Data Structures (GADTs):
+        https://wiki.haskell.org/GADTs_for_dummies
+    * Advanced Functional Programming (Mindup Allegro): https://github.com/fkowal/fp-course
+
+    * MIMUW notes: https://www.mimuw.edu.pl/~zawlocki/haskell/Programowanie_w_Haskellu.html
+    * Parallelism & Concurrency: http://www.cse.chalmers.se/edu/year/2015/course/pfp/lectures/lecture2/Marlow14.pdf
+
+    * WHAT I WISH I KNEW WHEN LEARNING HASKELL: http://dev.stephendiehl.com/hask/
+
 
     * Hitchhikers guide to Haskell: https://wiki.haskell.org/Hitchhikers_guide_to_Haskell
     * like-Haskell on JVM: https://eta-lang.org/
@@ -54,6 +80,9 @@ stack test :chapter3
 
 * Data structures
     * List = homogenous (of the single type)
+    * Tuples = eg. function "(,,)" creates a tuple of 3 values
+
+* Lazy = "non-strict evaluation" / "call by need"
 
 * Types
     * Integer = default, arbitrary precision integers
@@ -69,13 +98,16 @@ stack test :chapter3
         - Ord (have an ordering): >, <, >=, <= (But they don't have to be enumerable, just comparable)
             123 `compare` 456 returns Ordering type with values (GT, LT, EQ)
             Require Eq.
+            Deriving types from Ord => based on type declaration order
         - Show: can be presented as String
             show - function that converts Show class to String 
         - Read: can be readable from String
             read - function that converts String into proper type
+            read "..." :: Person (in GHCi you give it a type if Haskell can't guess it from context)
         - Enum: sequentially ordered types (can be enumerated). Are also Ord'ered and has additional properties (succ, pred = can be enumerated)
             Can be used in ranges!
             Have defined successor and predecessor (functions: succ, pred).
+            REQUIRED: all the value constructors are nullary (take no parameters, i.e. fields)
         - Bounded: have an upper and a lower bound
             minBound, maxBound - functions of type (Bounded a) => a
             Polymorphic constants:
@@ -167,6 +199,12 @@ stack test :chapter3
     * Multiple arguments: \x y -> x + y
     * With pattern matching: \(x, y) -> x + y
 
+* Infix Operators and Section (Partial application of Infix Operators): https://wiki.haskell.org/Section_of_an_infix_operator
+    - "(2^)" (left section) is equivalent to "(^) 2", or more verbosely "\x -> 2 ^ x"
+    - "(^2)" (right section) is equivalent to "flip (^) 2", or more verbosely "\x -> x ^ 2"
+    - "(++ "ABC")"
+    - "("ABC" ++)"
+
 * Function application: " " and "$"
     * Function application with " " has very high precedence and it's left-associative: f x y = ((f x) y)
     * Function application with "$" has the lowest precedence and it's right-associative: f x y = (f (x y))
@@ -254,10 +292,12 @@ stack test :chapter3
 
 
 
+..:: Referential Transparency ::..
+The point of referential transparency is to improve the ability to reason about code (i.e. you don't have to worry about the state of private variables or globals or input from the user changing how your code works) It also allows a wide range of compiler optimizations because the compiler can make more assumptions. Concurrency is aided because shared state is non-existent.
 
+The language isn't complicated for the sake of being complicated it is just trading simplicity in some areas for complexity in others. There are similar trade-offs in imperative languages, some things that are complicated and error prone that are simple and elegant in functional languages.
 
-
-
+It's a trade-off. like habitue said, you trade some things, like the ability to just point to the damn tree with a pointer, for persistence and referential transparency. keep in mind that you can traverse a tree without zippers for all the usual traversals (infix, postfix, prefix, etc.), zippers are just good if you wanna keep a focus and be able to easily move around.
 
 
 
@@ -270,21 +310,87 @@ stack test :chapter3
 
 
 ?????????????????????????????????????
+
+//TODO: Skad foldl bierze Monoid'a zeby uzyc implementacjjij foldMap ????
+test1 = foldl (+) 0 testTree
+
+
+
+
+
+
+
+?????????????????????????????????????
+* Wspolbieżnosc
+
 * Rekurencja vs Fold: It's usually better to use folds for this standard list recursion pattern instead of explicitly writing the recursion because they're easier to read and identify
     - Fold nie jest lazy !!!!!!!!!!!!!
 
+* Don't put a class constraint in the data declaration !!!!!!!!!!!!! Wtedy nie wszystkie funkcje działają na danym typie.... a to jest jakoś dziwne....
+    Just (*3) > Just (*2) => don't compile. So Just don't tell you what you can do with it's instances...
+
+    np. Just i equals:
+        data Car = No | Car deriving (Show)
+        Just Car == Just Car -- wywala się
+
+* Multi/No-parameter classes => supported only with extension enabled
+
+* Dlaczego to nie działa??
+    instance YesNo (Maybe Int) where
+        yesno Nothing  = False
+        yesno (Just _) = True
+
+* Jak zrobić to?
+    data Car a b = Car {model :: a, year :: b} deriving Show
+    c = Car {model="Mustang", year=2019}
+    
+    --f c = "Car is " ++ model c ++ " of year " ++ show (year c)
+    f (Car {model = m, year = y}) = "Car is " ++ m ++ " of year " ++ show y
+    
+    instance Functor (a -> (Car a b)) where         -- TO NIE DZIAŁA!!
+        fmap f (Car {model = m, year = y}) = Car {model = (f m), year = y}
+        
+    
+    -- TO DZIAŁA - czyli w miejscu gdzie jest t1 możemy użyć funkcji (a -> b)
+    f x f1 = f1 x
+    f show (\x -> x 123) g
 
 
+* Haskell - covariant types ??? ma to sens???
+
+* :k Type ? VS :k Class ??? Czym to się różni? Jak jest z klasami które mają kilka metod?
+
+* Leniwość IO Haskella przetestować:
+    1. Generujemy bardzo duży plik
+        Zrobienie cat duży_plik | less powoduje wczytanie tylko około 1400 linii tego pliku, a reszta czeka aż doczytamy less'em
+    2. Odpalamy nasz proces z efektem ubocznym używając awk ;)
+        cat duży_plik | awk '{ print $0; print $0 >> (pwd "co_zostało_wczytane_out")  }' | ./haskellProgram
+    3. Nawet jak program haskellowy nie powoduje czytania wejścia to przez awk przechodzi około 1400 linii pliku, ale nie więcej (są to jakieś bufory terminala)  
+
+* Jak to działa w terminalu:
+    https://brandonwamboldt.ca/how-linux-pipes-work-under-the-hood-1518/
+    Dane w terminalu pushowane są od wejście do wyjścia, ale pomiędzy procesami każdy pipe ma jakiś bufor.
+    Jak bufor się wypełni, to blokuje się program piszący do niego, więc czeka (dlatego np. cat nie wczytuje całego pliku, bo jak nikt nie czyta to nie ma gdzie dalej pisać).
+    Dlatego też awk przetworzył linie wczytane przez cat, a program haskellowy niczego nie przetworzył.
 
 
-
-
-
+* Algebraic data type - a kind of composite type, a type formed by combining other types
 
 
 
 ---
+# Additional info
+* PointFree: https://wiki.haskell.org/Pointfree
+
+
 # Category Theory for programmers
+
+* Functor:
+    ** https://en.wikipedia.org/wiki/Functor
+    ** https://bartoszmilewski.com/2015/01/20/functors/
+
+* http://www.haskellforall.com/2012/08/the-category-design-pattern.html
+* http://www.haskellforall.com/2012/09/the-functor-design-pattern.html
 
 * Category theory
     * the source of useful programming ideas (explored eg. by Haskell)
@@ -297,12 +403,30 @@ stack test :chapter3
         3. functional programming is about composing functions and algebraic data structures,
             Concurrency: But also about composable concurrency (impossible with outer paradigms)
 
+* Functional jargon => https://github.com/hemanth/functional-programming-jargon
+
+* Kurs Haskell inny => http://openhaskell.com/
 
 
 
 
+DO DYSKUSJI:
+    * dziwne typy?
+        :t 1
+        :t (1)
+        
+    * IO => daje podobny efekt jak Observable albo Future => jak używasz nieumiejętnie to propaguje się po całej aplikacji
 
-
+    * let bez in => zachowuje się trochę jak I/O action?
+    * to co w końcu przyjmuje do ????? listę I/O actions? czy coś innego? co to takiego to coś?
+    * nawiasy vs wcięcia ??? ilość wcięć nie ma znaczenia, tylko równa głębokość
+    
+    
+    * Jak się zachowuje terminal ???
+    * awk => side effects while file reading (write to another file):
+        cat in | awk '{ print $0; print $0 >> (pwd "out")  }'
+    Ale jak zrobić breakPointa aplikacjij odpalonej w terminalu ???
+    
 
 
 

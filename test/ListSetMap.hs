@@ -65,7 +65,10 @@ unitTestsListSetMap = testGroup "Unit tests Lists, Sets, Maps etc."
     {- (==) `on` (> 0)  ====  \x y -> (x > 0) == (y > 0) -}
     testCase "groupBy with on" $ assertEqual [] [[-4.3,-2.4,-1.2],[0.4,2.3,5.9,10.5,29.1,5.3],[-2.4,-14.5],[2.9,2.3]] $ groupBy ((==) `on` (> 0)) [-4.3, -2.4, -1.2, 0.4, 2.3, 5.9, 10.5, 29.1, 5.3, -2.4, -14.5, 2.9, 2.3],
     {- compare `on` length  ====   \x y -> length x `compare` length y -}
-    testCase "sortBy" $ assertEqual [] [[],[2],[2,2],[1,2,3],[3,5,4,3],[5,4,5,4,4]] $ sortBy (compare `on` length) [[5,4,5,4,4],[1,2,3],[3,5,4,3],[],[2],[2,2]]
+    testCase "sortBy" $ assertEqual [] [[],[2],[2,2],[1,2,3],[3,5,4,3],[5,4,5,4,4]] $ sortBy (compare `on` length) [[5,4,5,4,4],[1,2,3],[3,5,4,3],[],[2],[2,2]],
+    {- comparing with reversed order -}
+    testCase "sortBy reversed order" $ assertEqual [] [10, 9..1] $ sortBy (flip compare) [1..10]
+
 
     {- GENERAL RULE: with xxxBy functions:
         * by functions that take an equality function, you usually do (==) `on` something
@@ -81,7 +84,7 @@ unitTestsListSetMap = testGroup "Unit tests Lists, Sets, Maps etc."
     , testCase "caesar cipher: encode" $ assertEqual [] "bcde" $ caesarEncode 1 "abcd"
     , testCase "caesar cipher: decode" $ assertEqual [] "abcd" $ caesarDecode 2 "cdef"
 
-    {- MAPS (Association Lists) -}
+    {- MAPS (Association Lists) - Implemented using Balanced Binary Search Trees -}
     {- Duplicates replace previous value -}
     , testCase "map: find Just b" $ assertEqual [] (Just "c") $ 2 `Map.lookup` (Map.fromList [(1, "a"), (2, "b"), (2, "c")])
     , testCase "map: find Nothing" $ assertEqual [] Nothing $ Map.lookup 3 (Map.fromList [(1, "a"), (2, "b")])
@@ -89,7 +92,7 @@ unitTestsListSetMap = testGroup "Unit tests Lists, Sets, Maps etc."
     , testCase "map: fromListWith concatenation" $ assertEqual [] (Just "cb") $ Map.lookup 2 (Map.fromListWith (\x y -> x ++ y) [(1, "a"), (2, "b"), (2, "c")])
     , testCase "map: fromListWith max" $ assertEqual [] (Just 19) $ Map.lookup 2 (Map.fromListWith max [(1, 11), (2, 12), (2, 19)])
 
-    {- SETS -}
+    {- SETS - Implemented using Balanced Binary Search Trees -}
     , testCase "set: intersection" $ assertEqual [] (Set.fromList "abc") $ Set.intersection (Set.fromList "xyzabcqwe") (Set.fromList "poiabclkj")
     , testCase "set: subset is a proper subset or the same set" $ assertEqual [] True $ let s = Set.fromList "abc" in s `Set.isSubsetOf` s
     , testCase "set: proper subset" $ assertEqual [] False $ let s = Set.fromList "abc" in s `Set.isProperSubsetOf` s
@@ -106,7 +109,13 @@ unitTestsListSetMap = testGroup "Unit tests Lists, Sets, Maps etc."
 
 {- @@ = function like (right-associative with lowest precedence) -}
 (@@) :: (a -> b) -> a -> b
-f @@ x =  f x
+f @@ x =  f xinstance Applicative Maybe where
+                 pure = Just
+                 Nothing <*> _ = Nothing
+                 (Just f) <*> something = fmap f something  instance Applicative Maybe where
+                                                                pure = Just
+                                                                Nothing <*> _ = Nothing
+                                                                (Just f) <*> something = fmap f something
 infixr 0 @@
 
 {-iii = same but with normal name-}

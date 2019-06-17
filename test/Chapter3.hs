@@ -217,7 +217,23 @@ last' = foldl1 (\_ x -> x)                --always use the x element ignoring ac
 
 
 
+{- Laziness of Haskell
+    => one of the example where Haskell can't be totally lazy is pattern matching !!!
+    => other example is Monads => every step must be executed even if you don't use it's results
+ -}
 
+and' :: Bool -> Bool -> Bool
+and' True b = b                 -- to jest short-circuit => nie musi liczyć 2giego argumentu
+and' _ _    = False
+
+and'' :: Bool -> Bool -> Bool
+and'' True True = True          -- to NIE jest short-circuit => musi wyliczyć 2gi argument! Jeżeli jego liczenie trwa nieskończoność, to ten program się nie skończy
+and'' _ _       = False
+
+
+
+-- How to implement elem (takes n'th element of the list, but without recursion)
+elem' n xs = head $ fold ($) xs (replicate n tail)    -- creates array of n 'tail' functions and applies them '($)' one by one to the starting 'xs' list
 
 
 
